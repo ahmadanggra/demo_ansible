@@ -1,0 +1,28 @@
+---
+- name: Demo arista delete vlan config
+  hosts: veos1
+  gather_facts: False
+  tasks:
+    - name: Delete vlan 10 ip address
+      arista.eos.eos_l3_interfaces:
+        config:
+          - name: Vlan 10
+            ipv4:
+              - address: 10.0.0.1/24
+        state: deleted
+    - name: Delete vlan 10 on eth1 
+      arista.eos.eos_l2_interfaces:
+        config:
+          - name: Ethernet1
+            mode: access 
+            access:
+              vlan: 10
+        state: deleted
+    - name: Remove vlan 10 and vlan 20
+      arista.eos.eos_vlans:
+        config:
+          - name: factory_1
+            vlan_id: 10
+          - name: factory_2
+            vlan_id: 20
+        state: deleted

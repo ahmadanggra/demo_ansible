@@ -1,0 +1,43 @@
+---
+- name: Demo arista gather data & config
+  hosts: veos1
+  gather_facts: False
+  tasks:
+    - name: Gather fact
+      arista.eos.eos_facts:
+        gather_subset:
+          - interfaces
+    - name: Print management port IP address
+      ansible.builtin.debug:
+        msg: "Switch IP management: {{ ansible_facts['net_interfaces']['Management1']['ipv4']['address'] }}/{{ ansible_facts['net_interfaces']['Management1']['ipv4']['masklen'] }}"
+    - name: Add vlan 10 and vlan 20
+      arista.eos.eos_vlans:
+        config:
+          - name: factory_1
+            vlan_id: 10
+          - name: factory_2
+            vlan_id: 20
+        state: merged
+    - name: Bind vlan 10 to 
+      arista.eos.eos_l2_interfaces:
+        config:
+          - name: Ethernet1
+            mode: access 
+            access:
+              vlan: 10
+        state: merged
+    - name: Config vlan 10 ip address
+      arista.eos.eos_l3_interfaces:
+        config:
+          - name: Vlan 10
+            ipv4:
+              - address: 10.0.0.1/24
+        state: merged
+    - name: Backup config to local
+      arista.eos.eos_config:
+        backup: true
+        backup_options:
+          filename: config_add_vlan.cfg
+    - name: Create checkpoint for restore
+      arista.eos.eos_command:
+        commands: configure checkpoint save before_change
