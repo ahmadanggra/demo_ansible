@@ -1,0 +1,6 @@
+#-------------------------------------------------#
+#CPU: 2                                           #
+#RAM: 8G                                          #
+#Hypervisor Type 2: VMWare Workstation Pro 17.6.4 #
+#OS: AlmaLinux 9.7 (Moss Jungle Cat)              #
+#-------------------------------------------------#
